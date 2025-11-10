@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KUES Blood Bank Management System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+        <span>KUES Blood Bank</span>
+      </div>
+      <button class="nav-toggle" id="navToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#home" class="nav-link active">Home</a></li>
+        <li><a href="#find-donors" class="nav-link">Find Donors</a></li>
+        <li><a href="#inventory" class="nav-link">Blood Inventory</a></li>
+        <li><a href="#request" class="nav-link">Request Blood</a></li>
+        <li><a href="#register" class="nav-link">Become a Donor</a></li>
+        <li><a href="#donor-login" class="nav-link" id="donorPortalLink">Donor Portal</a></li>
+        <li><a href="#admin" class="nav-link">Admin</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main id="mainContent">
+    <!-- Home Page -->
+    <section id="home" class="page active">
+      <div class="hero">
+        <div class="container">
+          <h1 class="hero-title">KUES Blood Bank Management System</h1>
+          <p class="hero-subtitle">Saving Lives Through Efficient Blood Management</p>
+          <div class="hero-actions">
+            <button class="btn btn--primary btn--lg" onclick="navigateTo('request')">Request Blood</button>
+            <button class="btn btn--outline btn--lg" onclick="navigateTo('register')">Become a Donor</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <!-- Statistics -->
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background: var(--color-bg-1);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="totalDonors">0</div>
+              <div class="stat-label">Total Donors</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: var(--color-bg-3);">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="totalUnits">0</div>
+              <div class="stat-label">Available Blood Units</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: var(--color-bg-4);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="pendingRequests">0</div>
+              <div class="stat-label">Pending Requests</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: var(--color-bg-5);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="livesSaved">0</div>
+              <div class="stat-label">Lives Saved</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Search -->
+        <div class="search-section">
+          <h2>Find Blood Donors</h2>
+          <div class="search-form">
+            <select class="form-control" id="quickSearchBloodType">
+              <option value="">Select Blood Type</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+            </select>
+            <button class="btn btn--primary" onclick="quickSearch()">Search Donors</button>
+          </div>
+          <div id="quickSearchResults" class="donor-cards-grid"></div>
+        </div>
+
+        <!-- Information Cards -->
+        <div class="info-cards-grid">
+          <div class="card info-card">
+            <h3>Why Donate Blood?</h3>
+            <ul>
+              <li>Save up to 3 lives with one donation</li>
+              <li>Free health screening</li>
+              <li>Helps reduce risk of heart disease</li>
+              <li>Stimulates blood cell production</li>
+              <li>Community service and recognition</li>
+            </ul>
+          </div>
+          <div class="card info-card">
+            <h3>Donation Requirements</h3>
+            <ul>
+              <li>Age: 18-65 years</li>
+              <li>Weight: Minimum 50 kg</li>
+              <li>Good general health</li>
+              <li>No recent illness or infection</li>
+              <li>No tattoos in last 6 months</li>
+              <li>8 weeks gap between donations</li>
+            </ul>
+          </div>
+          <div class="card info-card">
+            <h3>Blood Compatibility</h3>
+            <p><strong>Universal Donor:</strong> O- can donate to all</p>
+            <p><strong>Universal Receiver:</strong> AB+ can receive from all</p>
+            <p><strong>Most Common:</strong> O+ (35% population)</p>
+            <p><strong>Rarest:</strong> AB- (1% population)</p>
+            <p>Always check compatibility before transfusion</p>
+          </div>
+        </div>
+
+        <!-- Emergency Banner -->
+        <div class="emergency-banner">
+          <svg class="emergency-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <div>
+            <div class="emergency-title">Need Blood Urgently?</div>
+            <div class="emergency-phone">Call: +880-1XXX-XXXXXX</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Find Donors Page -->
+    <section id="find-donors" class="page">
+      <div class="container">
+        <h1>Find Blood Donors</h1>
+        <div class="search-panel card">
+          <input type="text" class="form-control" id="donorSearchInput" placeholder="Search by name, blood type, or location">
+          <div class="filters-grid">
+            <div class="form-group">
+              <label class="form-label">Blood Type</label>
+              <div class="checkbox-group" id="bloodTypeFilters"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">City</label>
+              <select class="form-control" id="cityFilter">
+                <option value="">All Cities</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select class="form-control" id="statusFilter">
+                <option value="">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-actions">
+            <button class="btn btn--primary" onclick="searchDonors()">Search</button>
+            <button class="btn btn--secondary" onclick="clearDonorFilters()">Clear Filters</button>
+          </div>
+        </div>
+        <div id="donorResults" class="donor-cards-grid"></div>
+        <div id="donorPagination" class="pagination"></div>
+      </div>
+    </section>
+
+    <!-- Blood Inventory Page -->
+    <section id="inventory" class="page">
+      <div class="container">
+        <h1>Blood Inventory</h1>
+        <div class="inventory-filters">
+          <select class="form-control" id="inventoryBloodTypeFilter" onchange="filterInventory()">
+            <option value="">All Blood Types</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+          </select>
+          <select class="form-control" id="inventoryStatusFilter" onchange="filterInventory()">
+            <option value="">All Status</option>
+            <option value="Good Stock">Good Stock</option>
+            <option value="Low Stock">Low Stock</option>
+            <option value="Critical">Critical</option>
+          </select>
+        </div>
+        <div id="inventoryCards" class="inventory-grid"></div>
+        <div class="card" style="margin-top: 32px;">
+          <h2>Detailed Inventory</h2>
+          <div class="table-responsive">
+            <table class="data-table" id="inventoryTable">
+              <thead>
+                <tr>
+                  <th>Blood Type</th>
+                  <th>Units Available</th>
+                  <th>Collection Date</th>
+                  <th>Expiration Date</th>
+                  <th>Status</th>
+                  <th>Location</th>
+                </tr>
+              </thead>
+              <tbody id="inventoryTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Request Blood Page -->
+    <section id="request" class="page">
+      <div class="container">
+        <h1>Request Blood</h1>
+        <div class="card form-card">
+          <form id="requestForm" onsubmit="submitRequest(event)">
+            <div class="form-group" style="background: #EFF6FF; padding: var(--space-16); border-radius: var(--radius-base); border: 1px solid #3B82F6;">
+              <label class="form-label" style="display: flex; align-items: center; gap: var(--space-8);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>Student ID*</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="studentId" 
+                placeholder="Enter your KUES Student ID (e.g., 211506)" 
+                pattern="[0-9]{6}" 
+                maxlength="6"
+                required
+                style="margin-top: var(--space-8);"
+              >
+              <small style="display: block; margin-top: var(--space-8); color: var(--color-text-secondary); font-size: var(--font-size-sm);">
+                Only KUES students can request blood. Enter your 6-digit student identification number.
+              </small>
+              <div id="studentIdError" style="display: none; color: var(--color-error); font-size: var(--font-size-sm); margin-top: var(--space-4);"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Request Type*</label>
+                <select class="form-control" id="requestType" required>
+                  <option value="">Select Type</option>
+                  <option value="Emergency">Emergency</option>
+                  <option value="Scheduled">Scheduled</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Patient Name*</label>
+                <input type="text" class="form-control" id="patientName" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Blood Type Needed*</label>
+                <select class="form-control" id="requestBloodType" required>
+                  <option value="">Select Blood Type</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Units Required*</label>
+                <input type="number" class="form-control" id="unitsRequired" min="1" max="10" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Hospital/Location*</label>
+                <input type="text" class="form-control" id="hospital" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Required Date*</label>
+                <input type="date" class="form-control" id="requiredDate" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Contact Person Name*</label>
+                <input type="text" class="form-control" id="contactPerson" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Contact Phone*</label>
+                <input type="tel" class="form-control" id="contactPhone" pattern="01[0-9]{9}" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Reason for Request*</label>
+              <textarea class="form-control" id="requestReason" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Additional Notes</label>
+              <textarea class="form-control" id="requestNotes" rows="2"></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary btn--full-width">Submit Request</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Donor Registration Page -->
+    <section id="register" class="page">
+      <div class="container">
+        <h1>Become a Blood Donor</h1>
+        <div class="card form-card">
+          <form id="donorForm" onsubmit="submitDonor(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Full Name*</label>
+                <input type="text" class="form-control" id="fullName" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Blood Type*</label>
+                <select class="form-control" id="bloodType" required>
+                  <option value="">Select Blood Type</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Date of Birth*</label>
+                <input type="date" class="form-control" id="dateOfBirth" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Gender*</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="gender" value="Male" required> Male</label>
+                  <label><input type="radio" name="gender" value="Female" required> Female</label>
+                  <label><input type="radio" name="gender" value="Other" required> Other</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Phone Number*</label>
+                <input type="tel" class="form-control" id="phone" pattern="01[0-9]{9}" placeholder="01XXXXXXXXX" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email*</label>
+                <input type="email" class="form-control" id="email" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Password* (Min 8 characters, letters &amp; numbers)</label>
+                <input type="password" class="form-control" id="donorPassword" minlength="8" maxlength="20" required>
+                <div id="donorPasswordStrength" class="password-strength"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Confirm Password*</label>
+                <input type="password" class="form-control" id="donorConfirmPassword" minlength="8" maxlength="20" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Address</label>
+              <textarea class="form-control" id="address" rows="2"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">City*</label>
+                <input type="text" class="form-control" id="city" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="hasDonatedBefore" onchange="toggleLastDonationField()">
+                I have donated blood before
+              </label>
+            </div>
+            <div id="lastDonationContainer" style="display: none;">
+              <div class="form-group">
+                <label class="form-label">Last Donation Date*</label>
+                <input type="date" class="form-control" id="lastDonation" max="">
+                <small style="display: block; margin-top: var(--space-8); color: var(--color-text-secondary); font-size: var(--font-size-sm);">
+                  This helps us track your eligibility for future donations (90-day waiting period)
+                </small>
+              </div>
+              <div id="eligibilityPreview" class="eligibility-preview" style="margin-top: var(--space-16);"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Emergency Contact Name</label>
+                <input type="text" class="form-control" id="emergencyName">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Emergency Contact Phone</label>
+                <input type="tel" class="form-control" id="emergencyPhone" pattern="01[0-9]{9}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Medical History Notes</label>
+              <textarea class="form-control" id="medicalHistory" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="consent" required>
+                I agree to donate blood and understand the requirements
+              </label>
+            </div>
+            <button type="submit" class="btn btn--primary btn--full-width">Register as Donor</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Donor Login Page -->
+    <section id="donor-login" class="page">
+      <div class="container">
+        <div class="admin-login">
+          <div class="card login-card">
+            <h2>Donor Login</h2>
+            <form id="donorLoginForm" onsubmit="donorLogin(event)">
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="donorLoginEmail" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Password</label>
+                <div style="position: relative;">
+                  <input type="password" class="form-control" id="donorLoginPassword" required>
+                  <button type="button" class="password-toggle" onclick="togglePasswordVisibility('donorLoginPassword', this)">Show</button>
+                </div>
+              </div>
+              <button type="submit" class="btn btn--primary btn--full-width">Login</button>
+            </form>
+            <div style="text-align: center; margin-top: 16px;">
+              <a href="#donor-forgot-password" onclick="navigateTo('donor-forgot-password')" style="color: var(--color-primary); font-size: var(--font-size-sm);">Forgot Password?</a>
+              <p style="margin-top: 12px; color: var(--color-text-secondary); font-size: var(--font-size-sm);">Don't have an account? <a href="#register" onclick="navigateTo('register')" style="color: var(--color-primary);">Register here</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Donor Forgot Password Page -->
+    <section id="donor-forgot-password" class="page">
+      <div class="container">
+        <div class="admin-login">
+          <div class="card login-card">
+            <h2>Reset Your Password</h2>
+            <p style="color: var(--color-text-secondary); margin-bottom: 24px;">Enter the email address associated with your donor account</p>
+            <form id="donorForgotForm" onsubmit="donorForgotPassword(event)">
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="donorForgotEmail" required>
+              </div>
+              <button type="submit" class="btn btn--primary btn--full-width">Send Reset Link</button>
+            </form>
+            <div style="text-align: center; margin-top: 16px;">
+              <a href="#donor-login" onclick="navigateTo('donor-login')" style="color: var(--color-primary); font-size: var(--font-size-sm);">Back to Login</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Donor Dashboard Page -->
+    <section id="donor-dashboard" class="page">
+      <div class="container">
+        <div class="admin-header">
+          <h1>Donor Dashboard</h1>
+          <button class="btn btn--outline" onclick="donorLogout()">Logout</button>
+        </div>
+        <div id="donorDashboardContent"></div>
+      </div>
+    </section>
+
+    <!-- Donor Profile Page -->
+    <section id="donor-profile" class="page">
+      <div class="container">
+        <div class="admin-header">
+          <h1>My Profile</h1>
+          <button class="btn btn--outline" onclick="navigateTo('donor-dashboard')">Back to Dashboard</button>
+        </div>
+        <div class="card form-card">
+          <form id="donorProfileForm" onsubmit="updateDonorProfile(event)">
+            <div id="donorProfileFields"></div>
+            <button type="submit" class="btn btn--primary btn--full-width">Save Changes</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blood Requests for Donors Page -->
+    <section id="donor-requests" class="page">
+      <div class="container">
+        <div class="admin-header">
+          <h1>Available Blood Requests</h1>
+          <button class="btn btn--outline" onclick="navigateTo('donor-dashboard')">Back to Dashboard</button>
+        </div>
+        <div id="donorRequestsContent"></div>
+      </div>
+    </section>
+
+    <!-- Donation History Page -->
+    <section id="donor-history" class="page">
+      <div class="container">
+        <div class="admin-header">
+          <h1>Donation History</h1>
+          <button class="btn btn--outline" onclick="navigateTo('donor-dashboard')">Back to Dashboard</button>
+        </div>
+        <div id="donorHistoryContent"></div>
+      </div>
+    </section>
+
+    <!-- Donor Settings Page -->
+    <section id="donor-settings" class="page">
+      <div class="container">
+        <div class="admin-header">
+          <h1>Account Settings</h1>
+          <button class="btn btn--outline" onclick="navigateTo('donor-dashboard')">Back to Dashboard</button>
+        </div>
+        <div id="donorSettingsContent"></div>
+      </div>
+    </section>
+
+    <!-- Admin Dashboard Page -->
+    <section id="admin" class="page">
+      <div class="container">
+        <div id="adminLogin" class="admin-login">
+          <div class="card login-card">
+            <h2>Admin Login</h2>
+            <form id="loginForm" onsubmit="adminLogin(event)">
+              <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" id="adminUsername" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" id="adminPassword" required>
+              </div>
+              <button type="submit" class="btn btn--primary btn--full-width">Login</button>
+            </form>
+            <div style="text-align: center; margin-top: 16px;">
+              <a href="#admin-forgot-password" onclick="navigateTo('admin-forgot-password')" style="color: var(--color-primary); font-size: var(--font-size-sm);">Forgot Password?</a>
+            </div>
+          </div>
+        </div>
+        <div id="adminDashboard" class="admin-dashboard" style="display: none;">
+          <div class="admin-header">
+            <h1>Admin Dashboard</h1>
+            <button class="btn btn--outline" onclick="adminLogout()">Logout</button>
+          </div>
+          <div class="stats-grid" id="adminStats"></div>
+          <div class="quick-actions">
+            <button class="btn btn--primary" onclick="showSection('pendingDonors')">Approve Pending Donors</button>
+            <button class="btn btn--primary" onclick="showSection('pendingRequests')">Manage Blood Requests</button>
+            <button class="btn btn--primary" onclick="showSection('inventoryManagement')">Update Inventory</button>
+            <button class="btn btn--primary" onclick="showSection('settings')">Settings</button>
+            <button class="btn btn--primary" onclick="generateReport()">Generate Report</button>
+          </div>
+          <div id="pendingDonors" class="admin-section">
+            <h2>Pending Donors</h2>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Donor ID</th>
+                    <th>Name</th>
+                    <th>Blood Type</th>
+                    <th>Phone</th>
+                    <th>Last Donation</th>
+                    <th>Days Since</th>
+                    <th>Eligibility</th>
+                    <th>Registration Date</th>
+                  </tr>
+                </thead>
+                <tbody id="pendingDonorsTable"></tbody>
+              </table>
+            </div>
+          </div>
+          <div id="pendingRequests" class="admin-section">
+            <h2>Pending Blood Requests</h2>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Request ID</th>
+                    <th>Student ID</th>
+                    <th>Patient Name</th>
+                    <th>Blood Type</th>
+                    <th>Units</th>
+                    <th>Hospital</th>
+                    <th>Priority</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="pendingRequestsTable"></tbody>
+              </table>
+            </div>
+          </div>
+          <div id="inventoryManagement" class="admin-section">
+            <h2>Inventory Management</h2>
+            <div class="card">
+              <form id="addInventoryForm" onsubmit="addInventory(event)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Blood Type*</label>
+                    <select class="form-control" id="invBloodType" required>
+                      <option value="">Select Blood Type</option>
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Units to Add*</label>
+                    <input type="number" class="form-control" id="invUnits" min="1" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Collection Date*</label>
+                    <input type="date" class="form-control" id="invCollectionDate" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Donor ID (Optional)</label>
+                    <input type="text" class="form-control" id="invDonorId">
+                  </div>
+                </div>
+                <button type="submit" class="btn btn--primary">Add to Inventory</button>
+              </form>
+            </div>
+          </div>
+          <div id="settings" class="admin-section">
+            <h2>Settings</h2>
+            <div class="settings-navigation">
+              <button class="btn btn--secondary" onclick="showSettingsTab('contentManagement')">Content Management</button>
+              <button class="btn btn--secondary" onclick="showSettingsTab('aboutPageEditor')">About Page Editor</button>
+              <button class="btn btn--secondary" onclick="showSettingsTab('accountSettings')">Account Settings</button>
+              <button class="btn btn--secondary" onclick="showSettingsTab('websiteConfig')">Website Configuration</button>
+            </div>
+            <div id="contentManagement" class="settings-tab">
+              <h3>Content Management</h3>
+              <div class="card" style="margin-top: 16px;">
+                <form id="contentForm" onsubmit="saveContentSettings(event)">
+                  <h4>Organization Information</h4>
+                  <div class="form-group">
+                    <label class="form-label">Organization Name (Max 50 characters)</label>
+                    <input type="text" class="form-control" id="orgName" maxlength="50" value="KUES Blood Bank" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Tagline/Bio (Max 150 characters)</label>
+                    <input type="text" class="form-control" id="orgTagline" maxlength="150" value="Saving Lives Through Efficient Blood Management" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Address (Max 300 characters)</label>
+                    <textarea class="form-control" id="orgAddress" maxlength="300" rows="2" required>Khulna University of Engineering &amp; Technology, Khulna, Bangladesh</textarea>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label">Email</label>
+                      <input type="email" class="form-control" id="orgEmail" value="info@kuesbloodbank.org" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Emergency Phone</label>
+                      <input type="tel" class="form-control" id="emergencyPhone" value="+880-1XXX-XXXXXX" required>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Operating Hours (Max 100 characters)</label>
+                    <input type="text" class="form-control" id="operatingHours" maxlength="100" value="24/7 Available" required>
+                  </div>
+                  <h4 style="margin-top: 24px;">About Page Content</h4>
+                  <div class="form-group">
+                    <label class="form-label">About Title (Max 100 characters)</label>
+                    <input type="text" class="form-control" id="aboutTitle" maxlength="100" value="About KUES Blood Bank" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">About Description (Max 2000 characters)</label>
+                    <textarea class="form-control" id="aboutDescription" maxlength="2000" rows="4" required>KUES Blood Bank is dedicated to providing safe, reliable blood supply to hospitals and patients in need. We maintain the highest standards of blood collection, testing, and storage.</textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Mission Statement (Max 500 characters)</label>
+                    <textarea class="form-control" id="missionStatement" maxlength="500" rows="2" required>To save lives by managing an efficient blood supply and connecting donors with those in need</textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Vision Statement (Max 500 characters)</label>
+                    <textarea class="form-control" id="visionStatement" maxlength="500" rows="2" required>To be the most trusted and reliable blood bank service in the region</textarea>
+                  </div>
+                  <button type="submit" class="btn btn--primary btn--full-width">Save Content Settings</button>
+                </form>
+              </div>
+            </div>
+            <div id="aboutPageEditor" class="settings-tab" style="display: none;">
+              <h3>About Page Editor</h3>
+              <p style="color: var(--color-text-secondary); margin-bottom: 24px;">Customize all content on the About page. Changes will be reflected immediately on the public About page.</p>
+              
+              <div class="about-editor-sections">
+                <!-- About Us Section -->
+                <div class="card" style="margin-bottom: 24px;">
+                  <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <h4 style="margin: 0; display: flex; align-items: center; gap: 12px;">
+                      <span class="collapse-icon">▼</span>
+                      About Us Content
+                    </h4>
+                  </div>
+                  <div class="collapsible-content" style="display: block;">
+                    <form id="aboutUsForm" onsubmit="saveAboutUs(event)" style="margin-top: 16px;">
+                      <div class="form-group">
+                        <label class="form-label">About Title (Max 100 characters)</label>
+                        <input type="text" class="form-control" id="aboutUsTitle" maxlength="100" required>
+                        <small style="color: var(--color-text-secondary); display: block; margin-top: 4px;"><span id="aboutUsTitleCount">0</span>/100 characters</small>
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">About Description (Max 2000 characters)</label>
+                        <textarea class="form-control" id="aboutUsDescription" maxlength="2000" rows="5" required></textarea>
+                        <small style="color: var(--color-text-secondary); display: block; margin-top: 4px;"><span id="aboutUsDescCount">0</span>/2000 characters</small>
+                      </div>
+                      <button type="submit" class="btn btn--primary">Save About Us Content</button>
+                    </form>
+                  </div>
+                </div>
+                
+                <!-- Mission & Vision Section -->
+                <div class="card" style="margin-bottom: 24px;">
+                  <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <h4 style="margin: 0; display: flex; align-items: center; gap: 12px;">
+                      <span class="collapse-icon">▼</span>
+                      Mission &amp; Vision
+                    </h4>
+                  </div>
+                  <div class="collapsible-content" style="display: block;">
+                    <form id="missionVisionForm" onsubmit="saveMissionVision(event)" style="margin-top: 16px;">
+                      <div class="form-group">
+                        <label class="form-label">Mission Statement (Max 500 characters)</label>
+                        <textarea class="form-control" id="missionText" maxlength="500" rows="3" required></textarea>
+                        <small style="color: var(--color-text-secondary); display: block; margin-top: 4px;"><span id="missionCount">0</span>/500 characters</small>
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Vision Statement (Max 500 characters)</label>
+                        <textarea class="form-control" id="visionText" maxlength="500" rows="3" required></textarea>
+                        <small style="color: var(--color-text-secondary); display: block; margin-top: 4px;"><span id="visionCount">0</span>/500 characters</small>
+                      </div>
+                      <button type="submit" class="btn btn--primary">Save Mission &amp; Vision</button>
+                    </form>
+                  </div>
+                </div>
+                
+                <!-- Benefits Section -->
+                <div class="card" style="margin-bottom: 24px;">
+                  <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <h4 style="margin: 0; display: flex; align-items: center; gap: 12px;">
+                      <span class="collapse-icon">▼</span>
+                      Why Donate Blood? - Benefits (Max 10 items)
+                    </h4>
+                  </div>
+                  <div class="collapsible-content">
+                    <div id="benefitsList" style="margin-top: 16px;"></div>
+                    <button type="button" class="btn btn--secondary" onclick="addBenefitItem()" id="addBenefitBtn" style="margin-top: 12px;">+ Add New Benefit</button>
+                    <button type="button" class="btn btn--primary" onclick="saveBenefits()" style="margin-top: 12px; margin-left: 12px;">Save All Benefits</button>
+                  </div>
+                </div>
+                
+                <!-- Requirements Section -->
+                <div class="card" style="margin-bottom: 24px;">
+                  <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <h4 style="margin: 0; display: flex; align-items: center; gap: 12px;">
+                      <span class="collapse-icon">▼</span>
+                      Eligibility Requirements (Max 15 items)
+                    </h4>
+                  </div>
+                  <div class="collapsible-content">
+                    <div id="requirementsList" style="margin-top: 16px;"></div>
+                    <button type="button" class="btn btn--secondary" onclick="addRequirementItem()" id="addRequirementBtn" style="margin-top: 12px;">+ Add New Requirement</button>
+                    <button type="button" class="btn btn--primary" onclick="saveRequirements()" style="margin-top: 12px; margin-left: 12px;">Save All Requirements</button>
+                  </div>
+                </div>
+                
+                <!-- Contact Information Section -->
+                <div class="card" style="margin-bottom: 24px;">
+                  <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <h4 style="margin: 0; display: flex; align-items: center; gap: 12px;">
+                      <span class="collapse-icon">▼</span>
+                      Contact Information
+                    </h4>
+                  </div>
+                  <div class="collapsible-content" style="display: block;">
+                    <form id="contactInfoForm" onsubmit="saveContactInfo(event)" style="margin-top: 16px;">
+                      <div class="form-group">
+                        <label class="form-label">Organization Address (Max 300 characters)</label>
+                        <textarea class="form-control" id="contactAddress" maxlength="300" rows="2" required></textarea>
+                        <small style="color: var(--color-text-secondary); display: block; margin-top: 4px;"><span id="addressCount">0</span>/300 characters</small>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label class="form-label">Phone Number</label>
+                          <input type="tel" class="form-control" id="contactPhone" required>
+                        </div>
+                        <div class="form-group">
+                          <label class="form-label">Email Address</label>
+                          <input type="email" class="form-control" id="contactEmail" required>
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label class="form-label">Emergency Hotline</label>
+                          <input type="tel" class="form-control" id="contactEmergency" required>
+                        </div>
+                        <div class="form-group">
+                          <label class="form-label">Operating Hours (Max 100 characters)</label>
+                          <input type="text" class="form-control" id="contactHours" maxlength="100" required>
+                          <small style="color: var(--color-text-secondary); display: block; margin-top: 4px;"><span id="hoursCount">0</span>/100 characters</small>
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn--primary">Save Contact Information</button>
+                    </form>
+                  </div>
+                </div>
+                
+                <div style="background: var(--color-bg-3); padding: 16px; border-radius: var(--radius-base); border: 1px solid rgba(16, 185, 129, 0.25);">
+                  <p style="margin: 0; color: var(--color-text-secondary); font-size: var(--font-size-sm);"><strong>Last Updated:</strong> <span id="aboutLastUpdated">Not yet updated</span></p>
+                </div>
+              </div>
+            </div>
+            
+            <div id="accountSettings" class="settings-tab" style="display: none;">
+              <h3>Account Settings</h3>
+              <div class="card" style="margin-top: 16px;">
+                <h4>Admin Information</h4>
+                <p><strong>Current Username:</strong> <span id="currentUsernameDisplay">admin</span></p>
+                <p><strong>Email:</strong> <span id="adminEmailDisplay">admin@kuesbloodbank.org</span></p>
+                <p><strong>Account Status:</strong> <span class="status status--success">Active</span></p>
+              </div>
+              <div class="card" style="margin-top: 16px;">
+                <h4>Update Email Address</h4>
+                <form id="updateEmailForm" onsubmit="updateAdminEmail(event)">
+                  <div class="form-group">
+                    <label class="form-label">New Email Address</label>
+                    <input type="email" class="form-control" id="newAdminEmail" required>
+                  </div>
+                  <button type="submit" class="btn btn--primary">Update &amp; Verify Email</button>
+                </form>
+              </div>
+              <div class="card" style="margin-top: 16px;">
+                <h4>Change Username</h4>
+                <form id="changeUsernameForm" onsubmit="changeUsername(event)">
+                  <div class="form-group">
+                    <label class="form-label">New Username (5-20 characters, alphanumeric only)</label>
+                    <input type="text" class="form-control" id="newUsername" pattern="[a-zA-Z0-9]{5,20}" minlength="5" maxlength="20" required>
+                    <small style="color: var(--color-text-secondary); display: block; margin-top: 8px;">Username must be 5-20 characters, alphanumeric only</small>
+                  </div>
+                  <button type="submit" class="btn btn--primary">Change Username</button>
+                </form>
+              </div>
+              <div class="card" style="margin-top: 16px;">
+                <h4>Change Password</h4>
+                <form id="changePasswordForm" onsubmit="changePassword(event)">
+                  <div class="form-group">
+                    <label class="form-label">Current Password</label>
+                    <input type="password" class="form-control" id="currentPassword" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">New Password (Min 8 characters, letters &amp; numbers)</label>
+                    <input type="password" class="form-control" id="newPassword" minlength="8" maxlength="20" required>
+                    <div id="passwordStrength" class="password-strength"></div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" minlength="8" maxlength="20" required>
+                  </div>
+                  <button type="submit" class="btn btn--primary">Change Password</button>
+                </form>
+              </div>
+            </div>
+            <div id="websiteConfig" class="settings-tab" style="display: none;">
+              <h3>Website Configuration</h3>
+              <div class="card" style="margin-top: 16px;">
+                <form id="configForm" onsubmit="saveWebsiteConfig(event)">
+                  <h4>Stock Thresholds</h4>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label">Good Stock Level (units)</label>
+                      <input type="number" class="form-control" id="goodStockLevel" min="1" value="20" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Low Stock Level (units)</label>
+                      <input type="number" class="form-control" id="lowStockLevel" min="1" value="10" required>
+                    </div>
+                  </div>
+                  <h4 style="margin-top: 24px;">Support Information</h4>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label">Support Email</label>
+                      <input type="email" class="form-control" id="supportEmail" value="support@kuesbloodbank.org" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Support Phone</label>
+                      <input type="tel" class="form-control" id="supportPhone" value="+880-XXXX-XXXXXX" required>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn--primary btn--full-width">Save Configuration</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin Forgot Password Page -->
+    <section id="admin-forgot-password" class="page">
+      <div class="container">
+        <div class="admin-login">
+          <div class="card login-card">
+            <h2>Reset Admin Password</h2>
+            <p style="color: var(--color-text-secondary); margin-bottom: 24px;">Enter the email address associated with your admin account</p>
+            <form id="adminForgotForm" onsubmit="adminForgotPassword(event)">
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="adminForgotEmail" required>
+              </div>
+              <button type="submit" class="btn btn--primary btn--full-width">Send Reset Link</button>
+            </form>
+            <div style="text-align: center; margin-top: 16px;">
+              <a href="#admin" onclick="navigateTo('admin')" style="color: var(--color-primary); font-size: var(--font-size-sm);">Back to Login</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Page -->
+    <section id="about" class="page">
+      <div class="container">
+        <h1>About KUES Blood Bank</h1>
+        <div class="card">
+          <h2>Our Mission</h2>
+          <p>The KUES Blood Bank Management System is dedicated to ensuring a reliable and efficient blood supply for our community. We strive to connect blood donors with patients in need, maintaining the highest standards of safety and quality.</p>
+          
+          <h2>Our Vision</h2>
+          <p>To create a sustainable blood donation ecosystem where no patient faces a shortage of blood and every donor feels valued for their contribution to saving lives.</p>
+          
+          <h2>Contact Information</h2>
+          <div class="contact-info">
+            <p><strong>Organization:</strong> KUES Blood Bank</p>
+            <p><strong>Address:</strong> Khulna University of Engineering &amp; Technology, Khulna, Bangladesh</p>
+            <p><strong>Emergency Phone:</strong> +880-1XXX-XXXXXX</p>
+            <p><strong>Email:</strong> info@kuesbloodbank.org</p>
+          </div>
+          
+          <h2>Operating Hours</h2>
+          <p><strong>Monday - Friday:</strong> 9:00 AM - 5:00 PM</p>
+          <p><strong>Saturday:</strong> 9:00 AM - 1:00 PM</p>
+          <p><strong>Sunday:</strong> Closed</p>
+          <p><strong>Emergency Services:</strong> 24/7</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>KUES Blood Bank</h3>
+          <p>Saving lives through efficient blood management</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#home" onclick="navigateTo('home')">Home</a></li>
+            <li><a href="#find-donors" onclick="navigateTo('find-donors')">Find Donors</a></li>
+            <li><a href="#inventory" onclick="navigateTo('inventory')">Blood Inventory</a></li>
+            <li><a href="#about" onclick="navigateTo('about')">About</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <p>KUET, Khulna, Bangladesh</p>
+          <p>Phone: +880-1XXX-XXXXXX</p>
+          <p>Email: info@kuesbloodbank.org</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 KUES Blood Bank. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modals -->
+  <div id="donorModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('donorModal')">&times;</button>
+      <h2>Donor Contact Information</h2>
+      <div id="donorModalContent"></div>
+    </div>
+  </div>
+
+  <div id="donationConfirmModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('donationConfirmModal')">&times;</button>
+      <h2>Confirm Blood Donation</h2>
+      <div id="donationConfirmContent"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <div id="loader" class="loader" style="display: none;">
+    <div class="spinner"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
